@@ -1,0 +1,99 @@
+class Textbox extends React.Component {
+  handleOnKeyDown =(event) => {
+    if (event.key === "Enter"){
+
+    this.props.addItem(event.target.value);
+    document.getElementById("userfield").value = "";
+
+ }
+}
+render() {
+
+  return (
+    <input type="text" id="userfield" onKeyDown={this.handleOnKeyDown} />
+  )
+
+}
+
+}
+
+class DoneList extends React.Component {
+render(){
+  const done = this.props.donelist;
+  const donelist = done.map(done => {
+return(<div>{done}</div>)
+
+  })
+return(
+  <div>
+    <h3>Done</h3>
+    <div className="panel-body done">{donelist}</div>
+  </div>)
+
+
+}
+}
+
+class TodoList extends React.Component {
+
+  movetodo = (i) => {
+    this.props.deleteItem(i);
+
+  }
+render(){
+  const todos = this.props.todos;
+  const todoslist = todos.map((todo,i) => {
+return(<div><input type="checkbox" onClick={() => this.movetodo(i)}/>{todo}</div>)
+
+});
+return(<div>{todoslist}</div>)
+
+
+
+
+
+}
+}
+class App extends React.Component {
+constructor(props){
+super(props);
+this.state={
+todos: [],
+donelist: []
+};
+}
+
+addItem = (newItem) => {
+  const updatedInput = this.state.todos.concat([newItem]);
+this.setState({
+   todos: updatedInput
+ })
+}
+
+deleteItem = (oldItem) => {
+const index = oldItem;
+const movedItem = this.state.todos.splice(oldItem,1);
+const donelist = this.state.donelist.concat([movedItem]);
+this.setState({
+todos: this.state.todos,
+donelist: donelist
+});
+}
+
+render(){
+
+return(
+
+     <div className="panel panel-default text-center">
+  <div className="panel-heading"><h1>A Recipe List</h1></div>
+  <TodoList todos={this.state.todos} deleteItem={this.deleteItem} />
+  <DoneList donelist={this.state.donelist} />
+  <Textbox addItem={this.addItem} />
+  <div className="panel-footer"><b>Coded and Designed by Leonard Tye and Zek</b></div>
+</div>
+);
+}
+
+}
+
+ReactDOM.render(<App />,document.getElementById("panel"))
